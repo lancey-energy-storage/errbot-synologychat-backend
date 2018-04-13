@@ -82,7 +82,7 @@ class SynologyChatBackend(ErrBot):
         self.ip = identity.get('ip', '0.0.0.0')
         self.port = identity.get('port', 8080)
         # log
-        log.info("initialized Synology Chat backend with url {}".format(identity.get('url'))
+        log.info("initialized Synology Chat backend with url {}".format(identity.get('url')))
 
     def build_identifier(self, txtrep):
         """
@@ -177,6 +177,7 @@ class SynologyChatBackend(ErrBot):
         # Start HTTP server
         self.connect_callback() # tell ErrBot we're up so it can load commands
         try:
+            log.info("running http server on host {0}:{1}".format(self.ip, self.port))
             app.run(host=self.ip, port=self.port) # fire the server
             # TODO: maybe find more production-suites ways to run flask
         except KeyboardInterrupt:
