@@ -1,0 +1,9 @@
+[Core]
+Name = SynologyChat
+Module = synologychat
+
+[Documentation]
+Description = A Synology Chat backend for errbot.
+Author = Pierre Schefler
+Version = 0.0.0
+Website = https://
