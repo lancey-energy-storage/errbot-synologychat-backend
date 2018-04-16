@@ -72,12 +72,16 @@ class SynologyChatBackend(ErrBot):
         if not identity.get('url'):
             log.critical("Missing 'url' parameter in BOT_IDENTITY")
             sys.exit(2)
-        if not identity.get('token'):
-            log.critical("Missing 'token' parameter in BOT_IDENTITY")
+        if not identity.get('token-incoming'):
+            log.critical("Missing 'token-incoming' parameter in BOT_IDENTITY")
+            sys.exit(2)
+        if not identity.get('token-outgoing'):
+            log.critical("Missing 'token-outgoing' parameter in BOT_IDENTITY")
             sys.exit(2)
         # parse params
-        self.token = identity.get('token')
-        self.incoming_url = identity.get('url') + "&token=%22" + self.token + "%22"
+        self.token_in = identity.get('token-incoming')
+        self.token_out = identity.get('token-outgoing')
+        self.incoming_url = identity.get('url') + "&token=%22" + self.token_in + "%22"
         self.bot_identifier = SynologyChatUser(0, "bot") # default name (not very important it seems)
         self.ip = identity.get('ip', '0.0.0.0')
         self.port = identity.get('port', 8080)
@@ -168,7 +172,7 @@ class SynologyChatBackend(ErrBot):
             # Debug
             log.debug("received message | args:{0} | form:{1}".format(request.args, request.form))
             # Verify that the request contains the token, otherwise it's an unauthorized request
-            if not request.form or not request.form['token'] or request.form['token'] != self.token:
+            if not request.form or not request.form['token'] or request.form['token'] != self.token_out:
                 ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
                 log.warning("unauthorized request: wrong or missing token | ip:{0} | args:{1} | form:{2}".format(ip, request.args, request.form))
                 return "Unauthorized\n", 401 
