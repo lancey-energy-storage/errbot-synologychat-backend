@@ -97,7 +97,14 @@ class SynologyChatBackend(ErrBot):
         """
         Prepare arguments for incoming message.
         """
+        # debug
         log.debug("building reply '{0}' to '{1}'".format(text, message.frm))
+        # replace markdown with Synology Chat specifics
+        text = text.replace("**", "*") # bold
+        text = text.replace("\n- ", "\n* ") # lists 
+        if text[0:2] == "- ": # if message begins with list
+            text[0] = '*'
+        # setup fields
         response     = self.build_message(text)
         response.frm = self.bot_identifier
         response.to  = message.frm
