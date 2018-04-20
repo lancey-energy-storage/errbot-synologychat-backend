@@ -122,9 +122,10 @@ class SynologyChatBackend(ErrBot):
         super().send_message(message)
         # build request body
         payload = {
-            "text"     : str(message), 
-            "user_ids" : [int(message.to.id)]
+            "text"     : str(message)
         }
+        if int(message.to.id) != 0:
+            payload["user_ids"] = [int(message.to.id)]
         data = "payload="+json.dumps(payload)
         log.debug("incoming message payload: {}".format(data))
         # build url
