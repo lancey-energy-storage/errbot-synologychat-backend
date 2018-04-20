@@ -92,10 +92,13 @@ class SynologyChatBackend(ErrBot):
         """
         Recognize references to users, such as @chatuser.
         
-        We need to have a table with user ids associated to user names, which only bots can get with an HTTP request, so it won't work with channels.
+        This first implementation only accepts @user references and returns an identifier with user_id=0.
+        The next implementation will user the user_list command with bots and will cache user ids from incoming requests for channels.
         """
         # TODO: implement cached user list
-        pass
+        if txtrep[0] == '@':
+            return SynologyChatUser(0, txtrep[1:])
+        raise Exception("Invalid Synology Chat identifier: {}".format(txtrep))
 
     def build_reply(self, message, text=None, private=False, threaded=False):
         """
@@ -144,7 +147,7 @@ class SynologyChatBackend(ErrBot):
         
     @property
     def mode(self):
-        return 'synologychat' # no idea what this is but that's how it's implemented in other backends
+        return 'synologychat' # to tell plugins which backend is loaded
         
     def query_room(self, room):
         """ 
